@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0f13">
+<title>CASE 001 — Последний заказ</title>
+<style>
+:root{--bg:#080b0e;--panel:#13191f;--panel2:#192129;--line:#303a43;--text:#f1f4f5;--muted:#9ba7b0;--green:#4e876f;--green2:#284c3e;--red:#9c4148}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{min-height:100vh}.app{width:100%;max-width:600px;min-height:100vh;margin:auto;background:#0e1419;box-shadow:0 0 50px #000}
+.top{position:sticky;top:0;z-index:20;background:#0e1419f2;backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px 15px}
+.toprow{display:flex;justify-content:space-between;align-items:center}.case{font-size:10px;letter-spacing:2px;color:#87939c}.brand{font-weight:800;font-size:17px}.status{font-size:10px;color:#87939c}.progress{height:3px;background:#20282f;border-radius:4px;margin-top:9px;overflow:hidden}.progress i{display:block;height:100%;width:5%;background:var(--green);transition:.25s}
+main{padding:18px 15px 86px}.screen{display:none}.screen.active{display:block}.eyebrow{font-size:10px;letter-spacing:1.8px;color:#87939c}.back{color:#aab4ba;font-size:14px;margin-bottom:14px;cursor:pointer}
+h1{font-size:40px;line-height:.98;margin:10px 0 15px;letter-spacing:-1px}h2{font-size:26px;line-height:1.05;margin:8px 0 14px}h3{margin:7px 0 9px}
+p{line-height:1.5}.muted{color:var(--muted)}.lead{font-size:16px;color:#cbd2d6;line-height:1.5}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin:11px 0}.card.tight{padding:11px}
+.note{background:#18241f;border:1px solid #315447;border-radius:14px;padding:13px;line-height:1.45;margin:12px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.tile{min-height:106px;text-align:left;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:14px;padding:13px;cursor:pointer}.tile .ico{font-size:23px}.tile b{display:block;margin:7px 0 4px}.tile span{font-size:12px;color:var(--muted);line-height:1.35}
+.choice,.btn{display:block;width:100%;border:1px solid #43505a;background:#202932;color:#fff;border-radius:13px;padding:14px;margin:9px 0;font:inherit;text-align:left;cursor:pointer}.choice:hover,.tile:hover{border-color:#668073}.choice b{display:block}.choice span{display:block;color:#a9b3ba;font-size:12px;line-height:1.4;margin-top:4px}.btn{text-align:center;font-weight:800}.primary{background:var(--green2);border-color:#4e806c}.danger{background:#382025;border-color:#704047}
+.fact{padding:10px 0;border-bottom:1px solid #283139;line-height:1.45}.fact:last-child{border-bottom:0}.tag{display:inline-block;font-size:9px;letter-spacing:1px;padding:3px 6px;border:1px solid #45525b;border-radius:99px;color:#aeb8be;margin-right:5px}
+.msg{max-width:88%;background:#252e35;border-radius:14px;padding:10px 12px;margin:7px 0;line-height:1.4}.msg.me{margin-left:12%;background:#245447}.msg .time{display:block;font-size:9px;color:#89959d;margin-top:4px}
+.photo{height:245px;border-radius:14px;background:linear-gradient(145deg,#4a4d4f,#101214);position:relative;overflow:hidden}.door{position:absolute;left:34%;top:7%;width:32%;height:91%;background:#4a4d4f;border:5px solid #272a2c}.num{position:absolute;top:8%;width:100%;text-align:center;font-weight:800}.sign{position:absolute;top:31%;left:28%;background:#ded8ca;color:#111;padding:6px 7px;font-size:9px;font-weight:900}.shadow{position:absolute;right:12%;bottom:0;width:29%;height:68%;background:#050505;clip-path:polygon(42% 0,65% 4%,100% 100%,0 100%)}.med{position:absolute;left:15%;bottom:17px;width:56px;height:29px;background:#9b303a;transform:rotate(-9deg)}
+.evidence{border-left:3px solid var(--green);background:#11191e;border-radius:0 10px 10px 0;padding:9px 10px;margin:8px 0;line-height:1.4}.evidence b{font-size:9px;letter-spacing:1.2px;color:#78a993}
+.bottom{position:fixed;bottom:0;left:0;right:0;z-index:30;max-width:600px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);background:#11171cf5;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}.bottom button{background:none;border:0;color:#aeb7bd;padding:8px 2px;font-size:10px}.bottom b{display:block;font-size:18px;margin-bottom:2px}
+textarea{width:100%;min-height:120px;resize:vertical;background:#090d11;color:#fff;border:1px solid #3b4650;border-radius:11px;padding:11px;font:inherit}
+.small{font-size:12px}.center{text-align:center}.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="toprow"><div><div class="case">CASE 001</div><div class="brand">Последний заказ</div></div><div class="status" id="status">РАССЛЕДОВАНИЕ</div></div>
+  <div class="progress"><i id="bar"></i></div>
+</header>
+
+<main>
+
+<section id="start" class="screen active">
+  <div class="eyebrow">18:20 · ТЕЛЕФОН АРТЁМА</div>
+  <h1>Артём исчез.</h1>
+  <p class="lead">Перед тобой его телефон. Последний заказ закончился у квартиры 407 — и после этого Артём перестал выходить на связь.</p>
+  <div class="card">
+    <h3>Последний заказ №84721</h3>
+    <p class="muted">Ресторан «Мята» → ул. Лесная, 14 → квартира 407</p>
+    <div class="fact"><b>18:17</b> — последнее фото Артёма</div>
+    <div class="fact"><b>18:18</b> — заказ отменён</div>
+    <div class="fact"><b>18:19</b> — аккаунт заказчика удалён</div>
+  </div>
+  <div class="note">🔎 <b>Ты расследуешь сам.</b><br>Выбирай любую улику, возвращайся к уже найденным фактам и ищи противоречия. Доска расследования сохраняет всё, что ты обнаружил.</div>
+  <h3>С чего начнёшь?</h3>
+  <div class="grid">
+    <button class="tile" onclick="openScreen('chat')"><div class="ico">💬</div><b>Переписки</b><span>Саша знала про 407 заранее.</span></button>
+    <button class="tile" onclick="openScreen('order')"><div class="ico">🧾</div><b>Заказ</b><span>Проверить историю №84721.</span></button>
+    <button class="tile" onclick="openScreen('gps')"><div class="ico">📍</div><b>GPS</b><span>Где была Саша в 17:56?</span></button>
+    <button class="tile" onclick="openScreen('photo')"><div class="ico">📷</div><b>Фото</b><span>Последний снимок Артёма.</span></button>
+    <button class="tile" onclick="openScreen('calls')"><div class="ico">📞</div><b>Звонки</b><span>Кто звонил Саше?</span></button>
+    <button class="tile" onclick="openScreen('timeline')"><div class="ico">🕒</div><b>Хронология</b><span>Собрать события по времени.</span></button>
+    <button class="tile" onclick="openScreen('people')"><div class="ico">👤</div><b>Люди</b><span>Кто связан с делом?</span></button>
+    <button class="tile" onclick="openScreen('board')"><div class="ico">🧩</div><b>Доска</b><span>Все найденные улики.</span></button>
+  </div>
+</section>
+
+<section id="chat" class="screen">
+  <div class="back" onclick="openScreen('start')">← Телефон</div><div class="eyebrow">ПЕРЕПИСКА · САША</div><h2>Последний вечер</h2>
+  <div class="card">
+    <div class="msg">Ты сегодня приедешь?<span class="time">17:42 · Саша</span></div>
+    <div class="msg me">Не знаю. У меня последний заказ.<span class="time">17:43 · Артём</span></div>
+    <div class="msg">В квартиру 407?<span class="time">17:43 · Саша</span></div>
+    <div class="msg me">Откуда ты знаешь?<span class="time">17:44 · Артём</span></div>
+    <div class="msg">Просто не ходи туда.<span class="time">17:44 · Саша</span></div>
+    <div class="msg">Потому что я уже там была.<span class="time">17:44 · Саша</span></div>
+    <div class="msg">Артём, мне сегодня опять звонили.<span class="time">17:51 · Саша</span></div>
+    <div class="msg me">Кто?<span class="time">17:51 · Артём</span></div>
+    <div class="msg">Тот же человек. Просто будь сегодня осторожен.<span class="time">17:52 · Саша</span></div>
+  </div>
+  <button class="choice" onclick="addClue('knows')"><b>Саша знала про квартиру 407 до появления заказа.</b><span>Сохранить как улику.</span></button>
+  <button class="choice" onclick="addClue('caller')"><b>Зафиксировать неизвестного человека.</b><span>Саша говорит «тот же человек».</span></button>
+</section>
+
+<section id="order" class="screen">
+  <div class="back" onclick="openScreen('start')">← Телефон</div><div class="eyebrow">ЗАКАЗ №84721</div><h2>История заказа</h2>
+  <div class="card">
+    <div class="fact"><b>18:03</b> — заказ создан</div><div class="fact"><b>18:04</b> — просмотр с iPhone S-19</div>
+    <div class="fact"><b>18:11</b> — «Оставьте заказ перед дверью»</div><div class="fact"><b>18:16</b> — «Не поднимайтесь»</div>
+    <div class="fact"><b>18:18</b> — заказ отменён</div><div class="fact"><b>18:19</b> — аккаунт удалён</div>
+  </div>
+  <div class="card"><div class="fact"><b>Плательщик:</b> Алексей Морозов</div><div class="fact"><b>Аккаунт создан:</b> 17:58</div><div class="fact"><b>Других заказов:</b> нет</div></div>
+  <button class="choice" onclick="addClue('trap')"><b>Аккаунт похож на одноразовый.</b><span>Создан непосредственно перед заказом и удалён после него.</span></button>
+</section>
+
+<section id="gps" class="screen">
+  <div class="back" onclick="openScreen('start')">← Телефон</div><div class="eyebrow">МЕСТОПОЛОЖЕНИЕ</div><h2>Где была Саша?</h2>
+  <div class="card"><b>Саша · 17:56</b><p class="muted">Лесная, 14. Сначала координаты у подъезда, затем около трёх минут — внутри здания.</p></div>
+  <div class="card"><b>Артём · 18:14–18:17</b><p class="muted">Подъём на 4 этаж. Последняя точка — коридор перед квартирой 407.</p></div>
+  <button class="choice" onclick="addClue('inside')"><b>Саша была внутри дома до создания заказа.</b><span>Её местоположение: 17:56. Заказ создан: 18:03.</span></button>
+</section>
+
+<section id="calls" class="screen">
+  <div class="back" onclick="openScreen('start')">← Телефон</div><div class="eyebrow">ЗВОНКИ САШИ</div><h2>Неизвестный номер</h2>
+  <div class="card">
+    <div class="fact"><b>17:49</b> — входящий · неизвестный · 00:18</div>
+    <div class="fact"><b>17:51</b> — Саша → Артём · 01:06</div>
+    <div class="fact"><b>18:09</b> — входящий · неизвестный · 00:07</div>
+    <div class="fact"><b>18:18</b> — Артём → Саша · не соединён</div>
+  </div>
+  <button class="choice" onclick="addClue('calls')"><b>Неизвестный звонит до и после прибытия Артёма.</b><span>17:49 — до заказа. 18:09 — Артём уже у 407.</span></button>
+</section>
+
+<section id="photo" class="screen">
+  <div class="back" onclick="openScreen('start')">← Телефон</div><div class="eyebrow">ПОСЛЕДНЕЕ ФОТО · 18:17</div><h2>Квартира 407</h2>
+  <div class="photo"><div class="door"><div class="num">407</div></div><div class="sign">НЕ ЗВОНИТЬ.</div><div class="shadow"></div><div class="med"></div></div>
+  <div class="card"><p>На двери: <b>«НЕ ЗВОНИТЬ.»</b></p><p class="muted">Возле двери видна тень человека. На полу — красная упаковка лекарства.</p></div>
+  <button class="choice" onclick="addClue('shadow')"><b>У двери находился человек.</b><span>Кто именно — фотография не доказывает.</span></button>
+  <button class="choice" onclick="addClue('medicine')"><b>Зафиксировать упаковку лекарства.</b><span>На ней различимо окончание названия «...прил».</span></button>
+</section>
+
+<section id="timeline" class="screen">
+  <div class="back" onclick="openScreen('start')">← Телефон</div><div class="eyebrow">ХРОНОЛОГИЯ</div><h2>Последние события</h2>
+  <div class="card">
+    <div class="fact"><b>17:42</b> — Саша спрашивает про поездку</div><div class="fact"><b>17:49</b> — неизвестный звонит Саше</div>
+    <div class="fact"><b>17:51</b> — Саша предупреждает Артёма</div><div class="fact"><b>17:56</b> — Саша у Лесной, 14</div>
+    <div class="fact"><b>17:58</b> — создан аккаунт Алексея Морозова</div><div class="fact"><b>18:03</b> — создан заказ №84721</div>
+    <div class="fact"><b>18:04</b> — Саша смотрит заказ</div><div class="fact"><b>18:17</b> — фото 407</div>
+    <div class="fact"><b>18:18</b> — заказ отменён</div><div class="fact"><b>18:19</b> — аккаунт удалён</div>
+  </div>
+  <button class="choice" onclick="addClue('before')"><b>Главное противоречие времени.</b><span>Саша была у дома за 7 минут до создания заказа.</span></button>
+</section>
+
+<section id="people" class="screen">
+  <div class="back" onclick="openScreen('start')">← Телефон</div><div class="eyebrow">ЛЮДИ</div><h2>Участники дела</h2>
+  <div class="card"><b>Артём</b><p class="muted">Курьер. Исчез после последнего заказа.</p></div>
+  <div class="card"><b>Саша</b><p class="muted">Девушка Артёма. Знала про 407, была в доме, получала звонки.</p></div>
+  <div class="card"><b>Алексей Морозов</b><p class="muted">Плательщик. Аккаунт появился незадолго до заказа и исчез после.</p></div>
+  <div class="card"><b>Неизвестный</b><p class="muted">Звонил Саше до и после прибытия Артёма к квартире.</p></div>
+</section>
+
+<section id="board" class="screen">
+  <div class="back" onclick="openScreen('start')">← Телефон</div><div class="eyebrow">ДОСКА РАССЛЕДОВАНИЯ</div><h2>Найденные факты</h2>
+  <div id="facts"></div>
+  <div class="card"><h3>❓ Что пока неизвестно</h3><div class="fact">Кто звонил Саше?</div><div class="fact">Кто стоял у двери?</div><div class="fact">Что произошло с Артёмом после 18:17?</div><div class="fact">Кто такой Алексей Морозов?</div></div>
+  <button class="btn primary" onclick="openScreen('deduction')">СОБРАТЬ ГИПОТЕЗУ</button>
+</section>
+
+<section id="deduction" class="screen">
+  <div class="back" onclick="openScreen('board')">← Доска</div><div class="eyebrow">СОПОСТАВЛЕНИЕ</div><h2>Что лучше объясняет факты?</h2>
+  <p class="muted">Это не тест с одной кнопкой. Отметь версию, которую считаешь наиболее убедительной.</p>
+  <div class="card"><b>Почему Саша была у дома до заказа?</b>
+    <button class="choice" onclick="mark('visit')"><b>Из-за человека, который ей звонил</b><span>Объясняет звонок 17:49 и предупреждение Артёму.</span></button>
+    <button class="choice" onclick="mark('random')"><b>Она оказалась там случайно</b><span>Не объясняет, откуда она знала про 407.</span></button>
+  </div>
+  <div class="card"><b>Зачем появился заказ?</b>
+    <button class="choice" onclick="mark('trap')"><b>Чтобы заманить Артёма</b><span>Одноразовый аккаунт + странные инструкции + исчезновение.</span></button>
+    <button class="choice" onclick="mark('normal')"><b>Это обычная доставка</b><span>Не объясняет отмену и удаление аккаунта.</span></button>
+  </div>
+  <button class="btn primary" onclick="openScreen('final')">ПРОВЕРИТЬ МОЮ ВЕРСИЮ</button>
+</section>
+
+<section id="final" class="screen">
+  <div class="eyebrow">ФИНАЛЬНЫЙ ВЫБОР</div><h2>Что произошло с Артёмом?</h2>
+  <p class="muted">Выбери версию, которую готов защищать своими уликами.</p>
+  <button class="choice" onclick="finishCase('trap')"><b>① Артёма заманили к квартире 407.</b><span>Заказ был приманкой.</span></button>
+  <button class="choice" onclick="finishCase('sasha')"><b>② Саша знает больше, чем говорит.</b><span>Она была в доме и знала адрес заранее.</span></button>
+  <button class="choice" onclick="finishCase('accident')"><b>③ Это цепочка случайных совпадений.</b><span>Улики не связаны между собой.</span></button>
+</section>
+
+<section id="ending" class="screen">
+  <div class="eyebrow">ДЕЛО ЗАВЕРШЕНО</div><div id="endingText"></div>
+  <div class="card"><h3>✍️ А теперь — твоя версия</h3><p class="muted">Напиши своими словами, что произошло.</p><textarea id="theory" placeholder="Я думаю, что..."></textarea><button class="btn primary" onclick="saveTheory()">СОХРАНИТЬ ВЕРСИЮ</button><div id="saved"></div></div>
+  <button class="btn" onclick="restart()">ПРОЙТИ ЗАНОВО</button>
+</section>
+
+</main>
+<nav class="bottom">
+  <button onclick="openScreen('start')"><b>📱</b>Телефон</button>
+  <button onclick="openScreen('board')"><b>🧩</b>Доска</button>
+  <button onclick="openScreen('timeline')"><b>🕒</b>Время</button>
+  <button onclick="openScreen('people')"><b>👤</b>Люди</button>
+</nav>
+</div>
+
+<script>
+const state={clues:new Set(),marks:new Set()};
+const clueText={
+knows:"Саша знала про квартиру 407 до появления заказа.",
+caller:"Саша упомянула неизвестного человека, который ей звонил.",
+trap:"Аккаунт Алексея Морозова создан перед заказом и удалён сразу после.",
+inside:"Саша была внутри Лесной, 14 в 17:56 — за семь минут до создания заказа.",
+calls:"Неизвестный звонил Саше в 17:49 и 18:09.",
+shadow:"На последнем фото у 407 видна тень человека.",
+medicine:"Возле двери лежит красная упаковка лекарства.",
+before:"Саша была у дома до появления заказа."
+};
+const order=['start','chat','order','gps','calls','photo','timeline','people','board','deduction','final','ending'];
+function openScreen(id){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ const idx=order.indexOf(id); const pct=Math.max(5,Math.round(idx/(order.length-1)*100));
+ document.getElementById('bar').style.width=pct+'%';
+ document.getElementById('status').textContent=id==='ending'?'ДЕЛО ЗАВЕРШЕНО':id==='final'?'ФИНАЛ':id==='deduction'?'ВЫВОД':'РАССЛЕДОВАНИЕ';
+ renderBoard(); window.scrollTo(0,0);
+}
+function addClue(k){
+ state.clues.add(k); renderBoard();
+ alert('Улика добавлена на доску расследования.');
+}
+function mark(k){state.marks.add(k);alert('Версия отмечена. Теперь проверь остальные факты и переходи к финалу.')}
+function renderBoard(){
+ const el=document.getElementById('facts'); if(!el)return;
+ if(!state.clues.size){el.innerHTML='<p class="muted">Пока пусто. Исследуй телефон и сохраняй важные факты.</p>';return}
+ el.innerHTML=[...state.clues].map(k=>`<div class="evidence"><b>УЛИКА</b><br>${clueText[k]}</div>`).join('');
+}
+function finishCase(k){
+ openScreen('ending');
+ const text={
+ trap:`<div class="card"><h2>Артёма, скорее всего, заманили.</h2><p class="muted">Самая сильная цепочка: Саша знала адрес заранее → находилась у дома до заказа → неизвестный звонил ей → появился одноразовый аккаунт → Артёма отправили к 407 → у двери оказался человек → аккаунт исчез.</p><p><b>Но дело ещё не раскрыто полностью: кто организовал ловушку?</b></p></div>`,
+ sasha:`<div class="card"><h2>Саша явно знает больше, чем говорит.</h2><p class="muted">Она знала про 407 до заказа и была внутри дома. Это делает её важным свидетелем — возможно, и участником. Но прямого доказательства её вины пока нет.</p></div>`,
+ accident:`<div class="card"><h2>Версия о случайности выглядит слабой.</h2><p class="muted">Слишком много событий сходятся во времени: визит Саши, её знание адреса, звонки, одноразовый заказ и человек у двери.</p></div>`
+ };
+ document.getElementById('endingText').innerHTML=text[k];
+}
+function saveTheory(){
+ const t=document.getElementById('theory').value.trim();
+ if(!t){alert('Сначала напиши свою версию.');return}
+ document.getElementById('saved').innerHTML='<div class="note"><b>Версия сохранена.</b><br>'+t.replace(/[<>]/g,'')+'</div>';
+}
+function restart(){location.reload()}
+renderBoard();
+openScreen('start');
+</script>
+</body>
+</html>
